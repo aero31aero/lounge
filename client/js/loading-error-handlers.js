@@ -1,14 +1,8 @@
-/* eslint strict: 0 */
 "use strict";
 
-/*
- * This is a separate file for two reasons:
- * 1. CSP policy does not allow inline javascript
- * 2. It has to be a small javascript executed before all other scripts,
- *    so that the timeout can be triggered while slow JS is loading
- */
-
 (function() {
+	document.getElementById("loading-page-message").textContent = "Loading the app…";
+
 	var displayReload = function displayReload() {
 		var loadingReload = document.getElementById("loading-reload");
 		if (loadingReload) {
@@ -61,3 +55,11 @@
 
 	window.addEventListener("error", window.g_LoungeErrorHandler);
 })();
+
+/*
+ * This is a separate file for two reasons:
+ * 1. CSP policy does not allow inline javascript
+ * 2. It has to be a small javascript executed before all other scripts,
+ *    so that the timeout can be triggered while slow JS is loading
+ */
+
