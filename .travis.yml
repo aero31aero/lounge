@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- 9 # Current stable 
+- 9 # Current stable
 - 8 # Active LTS until April 2019
 - 6 # Active LTS until April 2018
 - 4 # Maintenance LTS until 2018-04-01, will be dropped in The Lounge v3
@@ -17,6 +17,10 @@ cache:
 
 before_script:
   - NODE_ENV=$BUILD_ENV npm run build
+
+script:
+  # Running front-end tests on the oldest Node version we support
+  - if [ "${TRAVIS_NODE_VERSION}" = "4" ]; then npm test; else npm run travis; fi
 
 notifications:
   email:

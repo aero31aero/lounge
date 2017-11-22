@@ -10,6 +10,9 @@ const findNames = require("./ircmessageparser/findNames");
 const merge = require("./ircmessageparser/merge");
 const colorClass = require("./colorClass");
 
+// FIXME: This is just for testing
+const templates = require("../../../views/chat.tpl"); // eslint-disable-line
+
 // Create an HTML `span` with styling information for a given fragment
 function createFragment(fragment) {
 	const classes = [];

@@ -1,14 +1,15 @@
 {
   "all": true,
   "exclude": [
-    "coverage",
+    "client/",
+    "coverage/",
     "public/",
     "test/",
-    "webpack.config.js"
+    "webpack.config*.js"
   ],
   "reporter": [
-    "lcov",
-    "text",
+    "json",
     "text-summary"
-  ]
+  ],
+  "clean": false
 }
