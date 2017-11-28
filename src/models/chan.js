@@ -57,11 +57,7 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 		return;
 	}
 
-	this.messages.push(msg);
-
-	if (client.config.log === true) {
-		writeUserLog.call(this, client, msg);
-	}
+	this.writeUserLog(client, msg);
 
 	if (Helper.config.maxHistory >= 0 && this.messages.length > Helper.config.maxHistory) {
 		const deleted = this.messages.splice(0, this.messages.length - Helper.config.maxHistory);
@@ -177,8 +173,10 @@ Chan.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
 	}, {});
 };
 
-function writeUserLog(client, msg) {
-	if (!msg.isLoggable()) {
+Chan.prototype.writeUserLog = function(client, msg) {
+	this.messages.push(msg);
+
+	if (!msg.isLoggable() || !this.isLoggable()) {
 		return false;
 	}
 
@@ -188,10 +186,47 @@ function writeUserLog(client, msg) {
 		return false;
 	}
 
+	client.manager.messageStorage.index(target.network.uuid, this.name, msg);
+
+	if (!client.config.log) {
+		return;
+	}
+
 	userLog.write(
 		client.name,
 		target.network.host, // TODO: Fix #1392, multiple connections to same server results in duplicate logs
 		this.type === Chan.Type.LOBBY ? target.network.host : this.name,
 		msg
 	);
-}
+};
+
+Chan.prototype.loadMessages = function(client, network) {
+	if (!this.isLoggable()) {
+		return;
+	}
+
+	client.manager.messageStorage
+		.getMessages(network, this)
+		.then((messages) => {
+			if (messages.length === 0) {
+				return;
+			}
+
+			// TODO: This needs to insert correctly based on time
+			this.messages.unshift(...messages);
+
+			if (!this.firstUnread) {
+				this.firstUnread = messages[messages.length - 1].id;
+			}
+
+			client.emit("more", {
+				chan: this.id,
+				messages: messages.slice(-100),
+			});
+		})
+		.catch((err) => log.error(`Failed to load messages: ${err}`));
+};
+
+Chan.prototype.isLoggable = function() {
+	return this.type === Chan.Type.CHANNEL || this.type === Chan.Type.QUERY;
+};

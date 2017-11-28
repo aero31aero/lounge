@@ -149,6 +149,14 @@ module.exports = {
 	webirc: null,
 
 	//
+	// Storing and reloading messages from sqlite
+	//
+	// @type     boolean
+	// @default  false
+	//
+	sqlite: false,
+
+	//
 	// Log settings
 	//
 	// Logging has to be enabled per user. If enabled, logs will be stored in

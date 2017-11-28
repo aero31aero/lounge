@@ -21,6 +21,8 @@ module.exports = function(irc, network) {
 				chan: chan.getFilteredClone(true),
 			});
 
+			chan.loadMessages(client, network);
+
 			// Request channels' modes
 			network.irc.raw("MODE", chan.name);
 		}

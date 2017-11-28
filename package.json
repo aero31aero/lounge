@@ -56,6 +56,7 @@
     "socket.io": "2.0.4",
     "spdy": "3.4.7",
     "thelounge-ldapjs-non-maintained-fork": "1.0.2",
+    "sqlite3": "3.1.13",
     "ua-parser-js": "0.7.17",
     "urijs": "1.19.1",
     "uuid": "3.1.0",
