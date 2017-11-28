@@ -51,4 +51,5 @@ exports.input = function(network, chan, cmd, args) {
 		shouldOpen: true,
 	});
 	this.save();
+	newChan.loadMessages(this, network);
 };

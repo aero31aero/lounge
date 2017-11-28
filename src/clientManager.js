@@ -7,6 +7,7 @@ const path = require("path");
 const Client = require("./client");
 const Helper = require("./helper");
 const WebPush = require("./plugins/webpush");
+const MessageStorage = require("./plugins/sqlite");
 
 module.exports = ClientManager;
 
@@ -18,6 +19,7 @@ ClientManager.prototype.init = function(identHandler, sockets) {
 	this.sockets = sockets;
 	this.identHandler = identHandler;
 	this.webPush = new WebPush();
+	this.messageStorage = new MessageStorage();
 
 	if (!Helper.config.public && !Helper.config.ldap.enable) {
 		// TODO: Remove deprecated warning in v3.0.0

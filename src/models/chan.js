@@ -57,11 +57,7 @@ Chan.prototype.pushMessage = function(client, msg, increasesUnread) {
 		return;
 	}
 
-	this.messages.push(msg);
-
-	if (client.config.log === true) {
-		writeUserLog.call(this, client, msg);
-	}
+	this.writeUserLog(client, msg);
 
 	if (Helper.config.maxHistory >= 0 && this.messages.length > Helper.config.maxHistory) {
 		const deleted = this.messages.splice(0, this.messages.length - Helper.config.maxHistory);
@@ -177,21 +173,71 @@ Chan.prototype.getFilteredClone = function(lastActiveChannel, lastMessage) {
 	}, {});
 };
 
-function writeUserLog(client, msg) {
-	if (!msg.isLoggable()) {
-		return false;
+Chan.prototype.writeUserLog = function(client, msg) {
+	this.messages.push(msg);
+
+	// Does this user have logs disabled
+	if (!client.config.log) {
+		return;
 	}
 
+	// Are logs disabled server-wide
+	if (Helper.config.message_store === "none") {
+		return;
+	}
+
+	// Is this particular message or channel loggable
+	if (!msg.isLoggable() || !this.isLoggable()) {
+		return;
+	}
+
+	// Find the parent network where this channel is in
 	const target = client.find(this.id);
 
 	if (!target) {
-		return false;
+		return;
 	}
 
-	userLog.write(
-		client.name,
-		target.network.host, // TODO: Fix #1392, multiple connections to same server results in duplicate logs
-		this.type === Chan.Type.LOBBY ? target.network.host : this.name,
-		msg
-	);
-}
+	// TODO: Something more pluggable
+	if (Helper.config.message_store === "sqlite") {
+		client.manager.messageStorage.index(target.network.uuid, this.name, msg);
+	} else if (Helper.config.message_store === "text") {
+		userLog.write(
+			client.name,
+			target.network.host, // TODO: Fix #1392, multiple connections to same server results in duplicate logs
+			this.type === Chan.Type.LOBBY ? target.network.host : this.name,
+			msg
+		);
+	}
+};
+
+Chan.prototype.loadMessages = function(client, network) {
+	if (!this.isLoggable()) {
+		return;
+	}
+
+	client.manager.messageStorage
+		.getMessages(network, this)
+		.then((messages) => {
+			if (messages.length === 0) {
+				return;
+			}
+
+			// TODO: This needs to insert correctly based on time
+			this.messages.unshift(...messages);
+
+			if (!this.firstUnread) {
+				this.firstUnread = messages[messages.length - 1].id;
+			}
+
+			client.emit("more", {
+				chan: this.id,
+				messages: messages.slice(-100),
+			});
+		})
+		.catch((err) => log.error(`Failed to load messages: ${err}`));
+};
+
+Chan.prototype.isLoggable = function() {
+	return this.type === Chan.Type.CHANNEL || this.type === Chan.Type.QUERY;
+};

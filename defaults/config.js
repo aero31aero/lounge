@@ -149,6 +149,19 @@ module.exports = {
 	webirc: null,
 
 	//
+	// Message logging
+	// Logging is also controlled per user individually (logs variable)
+	//
+	// none: Do not store any logs
+	// text: Text file per network/channel in user folder
+	// sqlite: Messages are stored in SQLite, this allows them to be reloaded on server restart
+	//
+	// @type     string
+	// @default  "text"
+	//
+	message_store: "text",
+
+	//
 	// Log settings
 	//
 	// Logging has to be enabled per user. If enabled, logs will be stored in
