@@ -66,15 +66,10 @@ h3 {
 	margin: 0;
 }
 
-input {
-	outline: 0;
-}
-
 button {
 	border: none;
 	background: none;
 	margin: 0;
-	outline: none;
 	padding: 0;
 }
 
@@ -132,7 +127,7 @@ kbd {
 	margin-bottom: 10px;
 	padding: 9px 17px;
 	text-transform: uppercase;
-	transition: background 0.2s, border-color 0.2s, color 0.2s;
+	transition: background 0.2s, border-color 0.2s, color 0.2s, box-shadow 0.2s;
 	word-spacing: 3px;
 	cursor: pointer; /* This is useful for `<button>` elements */
 }
@@ -149,8 +144,15 @@ kbd {
 	opacity: 1;
 }
 
+#chat .search:focus,
+.input:focus,
+.btn:active,
+.btn:focus {
+	outline: 0;
+	box-shadow: 0 0 0 3px rgba(132, 206, 136, 0.5);
+}
+
 .btn:active {
-	box-shadow: none;
 	opacity: 0.8;
 }
 
@@ -778,9 +780,8 @@ kbd {
 	font-size: 14px;
 	margin: 2px 0;
 	margin-bottom: 10px;
-	outline: 0;
 	padding: 8px 10px;
-	transition: border-color 0.2s;
+	transition: border-color 0.2s, box-shadow 0.2s;
 	width: 100%;
 }
 
@@ -791,6 +792,12 @@ kbd {
 .input:not(:disabled):hover,
 .input:not(:disabled):focus {
 	border-color: #79838c;
+}
+
+#chat .search:focus,
+.input:focus,
+.input:hover {
+	border-color: #84ce88;
 }
 
 #windows select.input {
@@ -1388,7 +1395,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 
 #chat .count {
 	background: #fafafa;
-	height: 48px;
 	left: 0;
 	position: absolute;
 	right: 0;
@@ -1400,10 +1406,10 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	border: 0;
 	background: none;
 	font: inherit;
-	outline: 0;
-	padding: 18px 16px;
+	padding: 14px 16px;
 	position: relative;
 	width: 100%;
+	transition: box-shadow 0.2s;
 }
 
 #chat .names {
@@ -1414,7 +1420,7 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	-webkit-overflow-scrolling: touch;
 	padding-bottom: 10px;
 	position: absolute;
-	top: 48px;
+	top: 47px;
 	width: 100%;
 	touch-action: pan-y;
 }
@@ -1751,10 +1757,6 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	display: block;
 }
 
-[contenteditable]:focus {
-	outline: none;
-}
-
 [contenteditable="true"] {
 	-webkit-user-select: text;
 	-moz-user-select: text;
@@ -1779,15 +1781,22 @@ part/quit messages where we don't load previews (adds a blank line otherwise) */
 	-webkit-flex: 0 0 auto;
 	flex: 0 0 auto;
 	border: 1px solid transparent;
-	transition: border-color 0.2s;
+	transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 #form #nick-value {
 	padding-right: 5px;
 }
 
+#form #nick-value:focus {
+	/* TODO: Re-arrange this so the root element is the contenteditable one so
+	         that there can be an outline on focus */
+	outline: 0;
+}
+
 #form #nick.editable {
-	border-color: black;
+	border-color: #84ce88;
+	box-shadow: 0 0 0 3px rgba(132, 206, 136, 0.5);
 }
 
 #nick button#set-nick,
