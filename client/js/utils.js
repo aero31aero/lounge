@@ -30,7 +30,7 @@ function findCurrentNetworkChan(name) {
 		.parent(".network")
 		.find(".chan")
 		.filter(function() {
-			return $(this).data("title").toLowerCase() === name;
+			return $(this).prop("aria-label").toLowerCase() === name;
 		})
 		.first();
 }
