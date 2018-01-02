@@ -84,6 +84,7 @@ const actionTypes = [
 	"action",
 	"whois",
 	"ctcp",
+	"ctcp_request",
 	"chghost",
 	"channel_list",
 ];

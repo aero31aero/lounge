@@ -1,15 +1,17 @@
 "use strict";
 
 const Msg = require("../../models/msg");
+const User = require("../../models/user");
 
 module.exports = function(irc, network) {
 	const client = this;
+	const lobby = network.channels[0];
 
 	irc.on("ctcp response", function(data) {
 		let chan = network.getChannel(data.nick);
 
 		if (typeof chan === "undefined") {
-			chan = network.channels[0];
+			chan = lobby;
 		}
 
 		const msg = new Msg({
@@ -37,5 +39,16 @@ module.exports = function(irc, network) {
 			break;
 		}
 		}
+
+		// Let user know someone is making a CTCP request against their nick
+		const msg = new Msg({
+			type: Msg.Type.CTCP_REQUEST,
+			time: data.time,
+			from: new User({nick: data.nick}),
+			hostmask: data.ident + "@" + data.hostname,
+			ctcpType: data.type,
+			ctcpMessage: data.message,
+		});
+		lobby.pushMessage(client, msg);
 	});
 };
