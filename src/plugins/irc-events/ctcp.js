@@ -1,5 +1,6 @@
 "use strict";
 
+const _ = require("lodash");
 const Msg = require("../../models/msg");
 const User = require("../../models/user");
 
@@ -24,7 +25,8 @@ module.exports = function(irc, network) {
 		chan.pushMessage(client, msg);
 	});
 
-	irc.on("ctcp request", (data) => {
+	// Limit requests to a rate of one per second max
+	irc.on("ctcp request", _.throttle((data) => {
 		switch (data.type) {
 		case "PING": {
 			const split = data.message.split(" ");
@@ -50,5 +52,5 @@ module.exports = function(irc, network) {
 			ctcpMessage: data.message,
 		});
 		lobby.pushMessage(client, msg);
-	});
+	}, 1000, {trailing: false}));
 };
