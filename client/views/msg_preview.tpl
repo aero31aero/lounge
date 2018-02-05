@@ -28,5 +28,10 @@
 			<div class="body" title="{{body}}">{{body}}</div>
 		</a>
 	{{/equal}}
+	{{#equal type "error"}}
+		{{#equal error "message"}}
+			<em>Server returned an error: {{message}}</em>
+		{{/equal}}
+	{{/equal}}
 </div>
 {{/preview}}
