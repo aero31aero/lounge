@@ -62,6 +62,8 @@ module.exports = function(irc, network) {
 		network.channels[0].pushMessage(client, new Msg({
 			text: "Connected to the network.",
 		}), true);
+
+		sendStatus();
 	});
 
 	irc.on("close", function() {
@@ -81,6 +83,8 @@ module.exports = function(irc, network) {
 			client.manager.identHandler.removeSocket(identSocketId);
 			identSocketId = 0;
 		}
+
+		sendStatus();
 	});
 
 	if (Helper.config.debug.ircFramework) {
@@ -138,4 +142,11 @@ module.exports = function(irc, network) {
 			serverOptions: network.serverOptions,
 		});
 	});
+
+	function sendStatus() {
+		const status = network.getNetworkStatus();
+		status.network = network.id;
+
+		client.emit("network:status", status);
+	}
 };

@@ -268,6 +268,16 @@ kbd {
 #sidebar .chan.lobby::before,
 #chat .lobby .title::before { content: "\f0a0"; /* http://fontawesome.io/icon/hdd-o/ */ }
 
+#sidebar .not-secure .chan.lobby::before {
+	content: "\f09c"; /* http://fontawesome.io/icon/unlock/ */
+	color: #ff1744;
+}
+
+#sidebar .not-connected .chan.lobby::before {
+	content: "\f1e6"; /* http://fontawesome.io/icon/plug/ */
+	color: #ff1744;
+}
+
 .context-menu-query::before,
 .context-menu-action-query::before,
 #sidebar .chan.query::before,
