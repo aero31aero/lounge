@@ -201,7 +201,8 @@ Chan.prototype.writeUserLog = function(client, msg) {
 	// TODO: Something more pluggable
 	if (Helper.config.message_store === "sqlite") {
 		client.manager.messageStorage.index(target.network.uuid, this.name, msg);
-	} else if (Helper.config.message_store === "text") {
+	}
+	if (Helper.config.message_store === "text" || true) {
 		userLog.write(
 			client.name,
 			target.network.host, // TODO: Fix #1392, multiple connections to same server results in duplicate logs
